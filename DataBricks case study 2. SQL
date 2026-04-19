@@ -1,0 +1,132 @@
+select * from `workspace`.`default`.`viewership_dataset` limit 100;
+
+
+
+
+select *
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID;
+ 
+
+-----------------------------------------------------------------------------------------------
+---Checking Viewership by province
+-----------------------------------------------------------------------------------------------
+
+select
+      Province,
+      COUNT(*) AS Viewership_By_Province
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+GROUP BY `Province`;
+
+----------------------------------------------------------------------------------------------
+---Checking Viwership By Race
+----------------------------------------------------------------------------------------------
+
+select
+       Race,
+       COUNT(*) AS viewership_By_Race
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+GROUP BY `Race`;
+
+-----------------------------------------------------------------------------------------------
+---checking Viwership By Age
+----------------------------------------------------------------------------------------------
+select 
+       Age,
+       COUNT(*) AS Viewership_By_Age
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+GROUP BY `Age`
+ORDER BY Age ASC;
+
+-----------------------------------------------------------------------------------------------
+---Checking the Viewership By Gender
+-----------------------------------------------------------------------------------------------
+
+select
+       Gender,
+       COUNT(*) AS Viewership_By_gender
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+GROUP BY `Gender`;
+
+----------------------------------------------------------------------------------------------
+---Checking Viwership By Channel
+----------------------------------------------------------------------------------------------
+select
+      Channel2,
+      COUNT(*) AS the_Most_Viewed_Show
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+GROUP BY `Channel2`;
+
+-----------------------------------------------------------------------------------------------
+---Checking channel viewers that are 20 years and above In DESC order
+----------------------------------------------------------------------------------------------
+select 
+       Channel2,
+       Age
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+WHERE Age >= 20
+ORDER BY Age DESC;
+
+
+-------------------------------------------------------------------------------------------------
+---Checking Channel viewers by Province and Race as black
+-------------------------------------------------------------------------------------------------
+
+select
+       Channel2,
+       Province,
+       Race
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID
+WHERE Province = 'Gauteng' AND Race = 'black';
+
+
+
+
+select
+     UserID0,
+     Channel2,
+     RecordDate2,
+     `Duration 2`,
+     userid4,
+     UserID,
+     Email,
+     Gender,
+     Race,
+     Age,
+     Province,
+     `Social Media Handle`,
+     date_format(timestamp(RecordDate2), 'HH:mm:ss') AS SA_Normal_time,
+     date_format(timestamp(`Duration 2`), 'HH:mm:ss') AS SA_Fixed_Duration,
+   CASE
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '06:00:00' AND '07:59:00' THEN 'very early in the morning'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '08:00:00' AND '09:59:00' THEN 'Early Morning'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '10:00:00' AND '11:59:00' THEN 'Late morning'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '12:00:00' AND '13:59:00' THEN 'Midday'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '14:00:00' AND '15:59:00' THEN 'Afternoon'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '16:00:00' AND '17:59:00' THEN 'Late Afternoon'
+        WHEN date_format(SA_Normal_time, 'HH:mm:ss') BETWEEN '18:00:00' AND '19:59:00' THEN 'Evening'
+ELSE 'NIght'
+END AS Time_Bucket,
+
+Dayname(RecordDate2) AS Day_name,
+Monthname(RecordDate2) AS Month_name,
+Dayofmonth(RecordDate2) As Day_of_Month
+from `workspace`.`default`.`viewership_dataset` AS A
+LEFT JOIN `workspace`.`default`.`user_profiles_dataset` AS B
+ON A.UserID0 = B.UserID;
+
